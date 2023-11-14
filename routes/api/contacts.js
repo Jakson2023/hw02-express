@@ -6,16 +6,9 @@ const contactsRouter = express.Router()
 
 contactsRouter.get('/',contactsController.getAllContacts)
 
-// contactsRouter.get('/:id', async (req, res, next) => {
+contactsRouter.get('/:id', contactsController.getContactById)
 
-//   const result = await contactService.getContactById()
-//   res.json(result)
-
-// })
-
-contactsRouter.post('/', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+contactsRouter.post('/', contactsController.add)
 
 contactsRouter.delete('/:contactId', async (req, res, next) => {
   res.json({ message: 'template message' })
