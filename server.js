@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import app from "./app.js";
 
 
-const DB_HOST = "mongodb+srv://Jaksond:9C60X8rJwExIKJU2@cluster0.d2hifxg.mongodb.net/ContactsDB?retryWrites=true&w=majority"
+const DB_HOST = "mongodb+srv://Jaksond:9C60X8rJwExIKJU2@cluster0.d2hifxg.mongodb.net/db-contacts?retryWrites=true&w=majority"
 mongoose.connect(DB_HOST)
 .then(()=>{
   app.listen(3000, () => {
