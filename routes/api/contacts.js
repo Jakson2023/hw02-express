@@ -8,7 +8,7 @@ contactsRouter.get("/", contactsController.getAllContacts);
 
 // contactsRouter.get("/:id", contactsController.getContactById);
 
-// contactsRouter.post("/", isEmptyBody, contactsController.add);
+ contactsRouter.post("/", isEmptyBody, contactsController.add);
 
 // contactsRouter.delete("/:id", contactsController.deleteById);
 
