@@ -8,7 +8,9 @@ import {
 
 const getAllContacts = async (req, res, next) => {
   try {
-    const result = await Contact.find();
+    const {_id: owner} = req.user;
+    const result = await Contact.find({owner});
+  
     res.json(result);
   } catch (error) {
     next(error);
@@ -18,7 +20,8 @@ const getAllContacts = async (req, res, next) => {
 const getContactById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const result = await Contact.findById(id);
+    const {_id: owner} = req.user;
+    const result = await Contact.findById({_id:id, owner});
     if (!result) {
       throw HttpError(404, `Contact with id=${id} not found`);
     }
@@ -31,11 +34,11 @@ const getContactById = async (req, res, next) => {
 const add = async (req, res, next) => {
   try {
     const { error } = contactsAddSchema.validate(req.body);
-    console.log(error);
     if (error) {
       throw HttpError(400, "missing required name field");
     }
-    const result = await Contact.create(req.body);
+    const {_id:owner} = req.user;
+    const result = await Contact.create({...req.body, owner});
     res.status(201).json(result);
   } catch (error) {
     next(error);
@@ -49,7 +52,8 @@ const updateById = async (req, res, next) => {
       throw HttpError(400, error.message);
     }
     const { id } = req.params;
-    const result = await Contact.findByIdAndUpdate(id, req.body);
+    const {_id: owner} = req.user;
+    const result = await Contact.findOneAndUpdate({_id:id, owner}, req.body);
     if (!result) {
       throw HttpError(404, `Contact with id=${id} not found?`);
     }
@@ -79,7 +83,8 @@ const updateStatusContact = async (req, res, next) => {
 const deleteById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const result = await Contact.findByIdAndDelete(id);
+    const {_id: owner} = req.user;
+    const result = await Contact.findOneAndDelete({_id: id, owner});
     if (!result) {
       throw HttpError(404, `Contact with id=${id} not found?`);
     }

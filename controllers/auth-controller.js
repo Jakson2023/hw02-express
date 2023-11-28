@@ -40,7 +40,6 @@ const payload = {
 }
 
 const token = jwt.sign(payload, JWT_SECRET, {expiresIn:"23h"});
-console.log(token);
 res.json ({
     token
 })

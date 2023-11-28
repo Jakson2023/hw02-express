@@ -19,10 +19,10 @@ const userSchema = new Schema ({
         type: String,
         minLength: 6,
         required: true
-    }
-
+    },
    
 
+   
 
 
 },{versionKey:false});
