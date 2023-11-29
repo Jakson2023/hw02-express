@@ -3,7 +3,7 @@ import { ctrlWrapper } from "../decorators/index.js";
 import { HttpError } from "../helpers/index.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-
+import userUpdSubSchema from "../models/User.js";
 const { JWT_SECRET } = process.env;
 const signup = async (req, res) => {
   const { email, password } = req.body;
@@ -60,9 +60,18 @@ const signout = async (req, res) => {
   res.status(204).end();
 };
 
+const updateSubscription = async (req, res) => {
+  const { _id } = req.user;
+  await User.findByIdAndUpdate(_id, req.body);
+  res.json({
+    message: "Subscription update",
+  });
+};
+
 export default {
   signup: ctrlWrapper(signup),
   signin: ctrlWrapper(signin),
   getCurrent: ctrlWrapper(getCurrent),
   signout: ctrlWrapper(signout),
+  updateSubscription,
 };

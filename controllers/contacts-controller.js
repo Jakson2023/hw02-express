@@ -8,9 +8,10 @@ import {
 
 const getAllContacts = async (req, res, next) => {
   try {
-    const {_id: owner} = req.user;
-    const result = await Contact.find({owner});
-  
+    const { _id: owner } = req.user;
+    const { page = 1, limit = 20, favorite } = req.query;
+    const skip = (page - 1) * limit;
+    const result = await Contact.find({ owner, favorite }, "", { skip, limit });
     res.json(result);
   } catch (error) {
     next(error);
@@ -20,8 +21,9 @@ const getAllContacts = async (req, res, next) => {
 const getContactById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const {_id: owner} = req.user;
-    const result = await Contact.findById({_id:id, owner});
+    const { _id: owner } = req.user;
+
+    const result = await Contact.findById({ _id: id, owner });
     if (!result) {
       throw HttpError(404, `Contact with id=${id} not found`);
     }
@@ -37,8 +39,8 @@ const add = async (req, res, next) => {
     if (error) {
       throw HttpError(400, "missing required name field");
     }
-    const {_id:owner} = req.user;
-    const result = await Contact.create({...req.body, owner});
+    const { _id: owner } = req.user;
+    const result = await Contact.create({ ...req.body, owner });
     res.status(201).json(result);
   } catch (error) {
     next(error);
@@ -52,8 +54,8 @@ const updateById = async (req, res, next) => {
       throw HttpError(400, error.message);
     }
     const { id } = req.params;
-    const {_id: owner} = req.user;
-    const result = await Contact.findOneAndUpdate({_id:id, owner}, req.body);
+    const { _id: owner } = req.user;
+    const result = await Contact.findOneAndUpdate({ _id: id, owner }, req.body);
     if (!result) {
       throw HttpError(404, `Contact with id=${id} not found?`);
     }
@@ -83,8 +85,8 @@ const updateStatusContact = async (req, res, next) => {
 const deleteById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const {_id: owner} = req.user;
-    const result = await Contact.findOneAndDelete({_id: id, owner});
+    const { _id: owner } = req.user;
+    const result = await Contact.findOneAndDelete({ _id: id, owner });
     if (!result) {
       throw HttpError(404, `Contact with id=${id} not found?`);
     }
