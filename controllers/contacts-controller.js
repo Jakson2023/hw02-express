@@ -6,6 +6,7 @@ import {
   contactsFavoriteSchema,
 } from "../models/Contact.js";
 
+
 const getAllContacts = async (req, res, next) => {
   try {
     const { _id: owner } = req.user;
