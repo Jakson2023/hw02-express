@@ -3,10 +3,10 @@ import { ctrlWrapper } from "../decorators/index.js";
 import { HttpError } from "../helpers/index.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import userUpdSubSchema from "../models/User.js";
 import fs from "fs/promises";
 import path from "path";
 import gravatar from "gravatar";
+import Jimp from "jimp";
 
 const avatarsPath = path.resolve("public", "avatars");
 const { JWT_SECRET } = process.env;
@@ -83,12 +83,14 @@ const updateSubscription = async (req, res) => {
 const updateAvatar = async (req, res) => {
   const { path: oldPath, filename } = req.file;
   const newPath = path.join(avatarsPath, filename);
+  const avatar = await Jimp.read(oldPath);
+  avatar.cover(250, 250).write(newPath);
   await fs.rename(oldPath, newPath);
-  const avatarURL = path.join("public", "avatars", filename);
+  const avatarURL = path.join("avatars", filename);
   await User.findByIdAndUpdate(req.user._id, { avatarURL });
 
   res.json({
-    message: "avatarURL:",
+    avatarURL,
   });
 };
 

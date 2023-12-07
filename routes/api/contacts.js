@@ -1,7 +1,10 @@
 import express from "express";
 import contactsController from "../../controllers/contacts-controller.js";
-import { isEmptyBody, isValidId, authenticate, upload} from "../../middlewares/index.js";
-
+import {
+  isEmptyBody,
+  isValidId,
+  authenticate,
+} from "../../middlewares/index.js";
 
 const contactsRouter = express.Router();
 contactsRouter.use(authenticate);
