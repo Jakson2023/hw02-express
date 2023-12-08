@@ -81,11 +81,14 @@ const updateSubscription = async (req, res) => {
 };
 
 const updateAvatar = async (req, res) => {
+  if(!req.file){
+    throw HttpError(400, "Avatar not found");
+  }
   const { path: oldPath, filename } = req.file;
   const newPath = path.join(avatarsPath, filename);
   const avatar = await Jimp.read(oldPath);
   avatar.cover(250, 250).write(newPath);
-  await fs.rename(oldPath, newPath);
+  await fs.unlink(req.file.path)
   const avatarURL = path.join("avatars", filename);
   await User.findByIdAndUpdate(req.user._id, { avatarURL });
 
@@ -100,5 +103,5 @@ export default {
   getCurrent: ctrlWrapper(getCurrent),
   signout: ctrlWrapper(signout),
   updateSubscription,
-  updateAvatar,
+  updateAvatar: ctrlWrapper(updateAvatar)
 };
